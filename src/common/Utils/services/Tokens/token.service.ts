@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidV4 } from 'uuid';
 import { redis } from '../redis';
-import { Sys_Role } from 'src/common/Enum';
 import { IDecodedToken, IToken } from 'src/common/Interfaces';
 
 @Injectable()
@@ -10,7 +9,7 @@ export class TokenServices {
   constructor(private readonly Jwt: JwtService) {}
 
   generateTokens = async (
-    { id, username, role = Sys_Role.user }: IToken,
+    { id, username, role = 'admin' }: IToken,
     Res: any,
   ) => {
     const jti = uuidV4();
@@ -36,7 +35,7 @@ export class TokenServices {
     return this.Jwt.sign(payload, { expiresIn: '30m' });
   };
   generateRefreshTokens = async (
-    { id, username, role = Sys_Role.user }: IToken,
+    { id, username, role = 'admin' }: IToken,
     Res: any,
   ) => {
     const newJti = uuidV4();

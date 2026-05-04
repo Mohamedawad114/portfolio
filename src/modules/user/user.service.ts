@@ -1,12 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { UserRepository } from 'src/common/Repositories/user.repository';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UpdateUserDto } from './Dto/updateUser.dto';
-import { redis, redisKeys } from 'src/common';
+import {
+  HashingService,
+  redis,
+  redisKeys,
+  TokenServices,
+  UserRepository,
+} from 'src/common';
+import { LoginDataDto } from './Dto/loginData.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly userRepo: UserRepository) {}
+  constructor(
+    private readonly userRepo: UserRepository,
+    private readonly hashService: HashingService,
+    private readonly tokenService: TokenServices,
+  ) {}
 
+  login = async (data: LoginDataDto, res: Response) => {
+    const user = await this.userRepo.findOneDocument(
+      { username: data.username },
+      { password: 1 },
+    );
+    const isMatch = await this.hashService.compare_hash(
+      data.password,
+      user!.password,
+    );
+    if (!isMatch) throw new BadRequestException('Invalid credentials');
+    const access_token = await this.tokenService.generateTokens(
+      { id: user!._id, username: user!.username },
+      res,
+    );
+    return { message: 'Login successful', data: access_token };
+  };
   updateUser = async (data: UpdateUserDto) => {
     const userUpdated = await this.userRepo.updateDocument({}, { ...data });
     await redis.set(redisKeys.User(), JSON.stringify(userUpdated));

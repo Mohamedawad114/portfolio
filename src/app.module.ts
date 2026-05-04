@@ -12,7 +12,12 @@ import {
 } from './common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerModule } from 'nestjs-pino';
-import { ContactInfoModule, ProjectsModule, SkillModule } from './modules';
+import {
+  ContactInfoModule,
+  ProjectsModule,
+  SkillModule,
+  UserModule,
+} from './modules';
 
 @Module({
   imports: [
@@ -36,6 +41,7 @@ import { ContactInfoModule, ProjectsModule, SkillModule } from './modules';
     ProjectsModule,
     SkillModule,
     ContactInfoModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [
