@@ -8,7 +8,6 @@ export class EmailProducer {
   sendEmailJob = async (data: {
     name: string;
     email: string;
-    subject: string;
     message: string;
   }) => {
     await this.emailQueue.add('sendEmail',data,

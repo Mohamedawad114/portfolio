@@ -34,8 +34,6 @@ export class AuthGuard implements CanActivate {
           }
           throw new UnauthorizedException('Invalid token');
         }
-        const isBlacklisted = await redis.get(redisKeys.token_blackList(token));
-        if (isBlacklisted) return false;
         const user = await this.userRepo.findByIdDocument(decoded.id);
         if (!user) throw new NotFoundException('user not found');
         request.user = user;
@@ -49,9 +47,7 @@ export class AuthGuard implements CanActivate {
         if (!auth) return false;
         const token = auth.split(' ')[1];
         if (!token) return false;
-        const tokenDecoded = this.tokenService.VerifyAccessToken(token);
-        const isBlacked = await redis.get(redisKeys.token_blackList(token));
-        if (isBlacked) return false;
+        const tokenDecoded = this.tokenService.VerifyAccessToken(token); 
         const user = await this.userRepo.findByIdDocument(tokenDecoded.id);
         if (!user) throw new NotFoundException('user not found');
         client.data.user = user;

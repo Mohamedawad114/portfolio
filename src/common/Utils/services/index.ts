@@ -4,4 +4,4 @@ export * from './redis/index';
 export * from './mailService/mail.module';
 export * from './Jobs/email/email.module';
 export * from './Jobs/email/email.producer';
-
+export *from './AI/ai.module'

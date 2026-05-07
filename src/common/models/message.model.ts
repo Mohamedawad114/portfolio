@@ -8,8 +8,8 @@ export class Message implements IMessage{
   senderName!: string;
   @Prop({ type: String, required: true })
   senderEmail!: string;
-  @Prop({ type: String, required: true })
-  subject!: string;
+  @Prop({ type: String, required: true ,maxLength:1000})
+  message!: string;
 }
 export type MessageDocument = HydratedDocument<Message>;
 const messageSchema = SchemaFactory.createForClass(Message);

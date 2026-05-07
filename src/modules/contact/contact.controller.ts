@@ -1,8 +1,8 @@
 import { Body, Controller, Get, HttpCode, Post, Put } from '@nestjs/common';
 import { ContactService } from './contact.service';
-import { AddContactInfo } from './Dto/addcontactInfo.dto';
 import { Auth } from 'src/common';
 import { UpdateContactInfo } from './Dto/updateContactInfo.dto';
+import { AddContactInfo } from './Dto/addcontactInfo.dto';
 
 @Controller('contactInfo')
 export class ContactController {

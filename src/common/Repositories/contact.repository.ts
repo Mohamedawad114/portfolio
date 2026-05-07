@@ -1,6 +1,5 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { BaseRepository } from './Base.repository';
-import { Skill, SkillDocument } from '../models';
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { ContactDocument, ContactInfo } from '../models/contact.model';

@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { BullModule } from '@nestjs/bullmq';
 import {
+  CommonModule,
   GlobalErrFilter,
   redis,
   ResponseInterceptor,
@@ -14,17 +15,24 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerModule } from 'nestjs-pino';
 import {
   ContactInfoModule,
+  EducationModule,
+  ExperienceModule,
+  MessageModule,
   ProjectsModule,
   SkillModule,
   UserModule,
 } from './modules';
+import { resolve } from 'path';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ envFilePath: '../config/dev.env' }),
+    ConfigModule.forRoot({
+      envFilePath: resolve('config/dev.env'),
+      isGlobal: true,
+    }),
     BullModule.forRoot({ connection: redis }),
     MongooseModule.forRoot(process.env.MONGO_URI as string, {
-      serverSelectionTimeoutMS: 30000,
+      serverSelectionTimeoutMS: 3000,
     }),
     LoggerModule.forRoot({
       pinoHttp: {
@@ -38,15 +46,18 @@ import {
         },
       },
     }),
+    CommonModule,
     ProjectsModule,
     SkillModule,
     ContactInfoModule,
     UserModule,
+    MessageModule,
+    ExperienceModule,
+    EducationModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    UserRepository,
     { provide: 'APP_INTERCEPTOR', useClass: ResponseInterceptor },
     { provide: 'APP_INTERCEPTOR', useClass: TimeoutInterceptor },
     { provide: 'APP_FILTER', useClass: GlobalErrFilter },

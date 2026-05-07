@@ -6,3 +6,4 @@ export * from './skill.interface';
 export * from './experience.interface';
 export * from './contact.interface';
 export * from './message.interface';
+export * from './education.interface';

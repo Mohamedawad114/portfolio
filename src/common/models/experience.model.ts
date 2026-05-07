@@ -12,7 +12,7 @@ export class Experience implements IExperience {
   startDate!: Date;
   @Prop({ type: Date, required: false })
   endDate!: Date;
-  @Prop({ type: String, required: true })
+  @Prop({ type: String, required: true ,maxLength: 400 })
   summary!: string;
 }
 export type ExperienceDocument = HydratedDocument<Experience>;
