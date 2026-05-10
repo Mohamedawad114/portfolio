@@ -35,16 +35,7 @@ export class MessageController {
     return await this.messageService.sendMessage(data);
   }
 
-  @Auth()
-  @ApiBearerAuth()
-  @Get('/:id')
-  @ApiOperation({ summary: 'Get a specific message by ID' })
-  @ApiParam({ name: 'id', description: 'The ID of the message', type: String })
-  @ApiResponse({ status: 200, description: 'Message retrieved successfully' })
-  async getMessage(@Param('id') id: string) {
-    return await this.messageService.getMessage(new Types.ObjectId(id));
-  }
-
+  
   @Auth()
   @ApiBearerAuth()
   @Get('all')
@@ -60,5 +51,14 @@ export class MessageController {
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
   ) {
     return await this.messageService.allMessages(limit, page);
+  }
+  @Auth()
+  @ApiBearerAuth()
+  @Get('/:id')
+  @ApiOperation({ summary: 'Get a specific message by ID' })
+  @ApiParam({ name: 'id', description: 'The ID of the message', type: String })
+  @ApiResponse({ status: 200, description: 'Message retrieved successfully' })
+  async getMessage(@Param('id') id: string) {
+    return await this.messageService.getMessage(new Types.ObjectId(id));
   }
 }
