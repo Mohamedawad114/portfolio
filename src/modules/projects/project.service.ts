@@ -47,10 +47,9 @@ export class ProjectServices {
     }
   };
   updateProject = async (data: UpdateProjectDto, projectId: Types.ObjectId) => {
-    const { Techs = [] } = data;
+    const { Techs = [], ...updateDate } = data;
     let TechsIds: Types.ObjectId[] = [];
     if (Techs.length) {
-      const { Techs = [] } = data;
       const skillIds = Array.from(new Set(Techs.map((id) => id.toString())));
       const objectIds = skillIds.map((id) => new Types.ObjectId(id));
       const skills = await this.skillRepo.findDocuments(
@@ -64,15 +63,15 @@ export class ProjectServices {
       TechsIds = objectIds;
     }
     try {
-      const project = await this.projectRepo.updateDocument(
-        { _id: projectId },
-        { ...data, Techs: { $addToSet: TechsIds } },
-      );
+      const project = await this.projectRepo.findAndUpdateDocument(projectId, {
+        $set: updateDate,
+        ...(TechsIds.length && { $addToSet: { Techs: { $each: TechsIds } } }),
+      });
       if (!project) throw new NotFoundException('Project update failed');
       await redis.del(redisKeys.projects());
       return { message: 'Project updated successfully', data: project };
     } catch (error) {
-      throw new NotFoundException('Project update failed');
+      throw error;
     }
   };
   deleteProject = async (projectId: Types.ObjectId) => {
@@ -88,7 +87,11 @@ export class ProjectServices {
   };
   getProjectDetails = async (projectId: Types.ObjectId) => {
     if (!projectId) throw new NotFoundException('ProjectId not found');
-    const project = await this.projectRepo.findOneDocument({ _id: projectId });
+    const project = await this.projectRepo.findOneDocument(
+      { _id: projectId },
+      {},
+      { populate: 'Techs' },
+    );
     if (!project) throw new NotFoundException('Project not found');
     return { message: 'Project details retrieved successfully', data: project };
   };
@@ -102,7 +105,7 @@ export class ProjectServices {
     const projects = await this.projectRepo.findDocuments(
       {},
       {},
-      { sort: { createdAt: -1 } },
+      { sort: { createdAt: -1 }, populate: 'Techs' },
     );
     await redis.setex(
       redisKeys.projects(),

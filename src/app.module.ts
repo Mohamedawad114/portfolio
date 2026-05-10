@@ -17,6 +17,7 @@ import {
   ContactInfoModule,
   EducationModule,
   ExperienceModule,
+  GatewayModule,
   MessageModule,
   ProjectsModule,
   SkillModule,
@@ -54,6 +55,7 @@ import { resolve } from 'path';
     MessageModule,
     ExperienceModule,
     EducationModule,
+    GatewayModule,
   ],
   controllers: [AppController],
   providers: [

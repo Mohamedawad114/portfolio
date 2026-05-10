@@ -38,8 +38,6 @@ export class User implements IUser {
   })
   password!: string;
   @Prop({ type: String, required: false })
-  profilePicture?: string;
-  @Prop({ type: String, required: true })
   position!: string;
 }
 export type UserDocument = HydratedDocument<User>;
@@ -48,6 +46,13 @@ UserSchema.pre('save', async function () {
   const hashService = new HashingService();
   if (this.isModified('password')) {
     this.password = await hashService.generateHash(this.password);
+  }
+});
+UserSchema.pre(['findOneAndUpdate','updateOne'], async function () {
+  const update = this.getUpdate() as any;
+  if (update.password) {
+    const hashService = new HashingService();
+    update.password = await hashService.generateHash(update!.password);
   }
 });
 export const userModel = MongooseModule.forFeature([

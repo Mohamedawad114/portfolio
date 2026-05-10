@@ -27,10 +27,9 @@ export class SkillServices {
   updateSkill = async (data: UpdateSkill, SKillId: Types.ObjectId) => {
     if (!SKillId) throw new NotFoundException('SkillId not found');
     try {
-      const skill = await this.skillRepository.updateDocument(
-        { _id: SKillId },
-        { ...data },
-      );
+      const skill = await this.skillRepository.findAndUpdateDocument(SKillId, {
+        ...data,
+      });
       await redis.del(redisKeys.skills());
       return { message: 'Skill added successfully', data: skill };
     } catch (error: any) {
@@ -48,7 +47,7 @@ export class SkillServices {
     );
     if (!deletedSkill) throw new NotFoundException('Skill not found');
     await redis.del(redisKeys.skills());
-    return { message: 'Skill added successfully', data: deletedSkill };
+    return { message: 'Skill deleted successfully', data: deletedSkill };
   };
   getSkills = async (limit: number, page: number) => {
     const cached = await redis.get(redisKeys.skills());
@@ -73,10 +72,11 @@ export class SkillServices {
   };
   getSkill = async (skillId: Types.ObjectId) => {
     if (!skillId) throw new NotFoundException('SkillId not found');
-    const skill = this.skillRepository.findOneDocument({
+    const skill = await this.skillRepository.findOneDocument({
       isDeleted: false,
       _id: skillId,
     });
+    if (!skill) throw new NotFoundException('skill not found');
     return {
       message: 'Skill retrieved successfully',
       data: skill,

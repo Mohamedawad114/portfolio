@@ -13,8 +13,8 @@ export class EducationService {
     return { message: 'education added', data: education };
   }
 
-  async getEducationById(id: Types.ObjectId) {
-    const education = await this.educationRepo.findOneDocument({ _id: id });
+  async getEducation() {
+    const education = await this.educationRepo.findOneDocument({});
     if (!education) {
       throw new NotFoundException('Education record not found');
     }

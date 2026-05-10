@@ -8,13 +8,11 @@ import {
   Types,
 } from 'mongoose';
 
-export abstract class BaseRepository<T>  {
-  constructor(private model: Model<T>) {
-  }
+export abstract class BaseRepository<T> {
+  constructor(private model: Model<T>) {}
   async create(doc: Partial<T>): Promise<T> {
     return this.model.create(doc);
   }
-
 
   async findDocuments(
     filter?: QueryFilter<T>,
@@ -28,24 +26,26 @@ export abstract class BaseRepository<T>  {
     projection?: ProjectionType<T>,
     options?: QueryOptions<T>,
   ): Promise<T | null> {
-    return this.model.findOne(filter, projection, options);
+    return this.model.findOne(filter, projection, options).lean();
   }
   async findOneDocumentAndUpdate(
     filter: QueryFilter<T>,
     payload: UpdateQuery<T>,
     options?: QueryOptions<T>,
   ): Promise<T | null> {
-    return this.model.findOneAndUpdate(filter, payload, {
-      new: true,
-      ...options,
-    });
+    return this.model
+      .findOneAndUpdate(filter, payload, {
+        new: true,
+        ...options,
+      })
+      .lean();
   }
   async findByIdDocument(
     id: Types.ObjectId | string,
     projection?: ProjectionType<T>,
     options?: QueryOptions<T>,
   ): Promise<T | null> {
-    return this.model.findById(id, projection, options);
+    return this.model.findById(id, projection, options).lean();
   }
   async findByIdAndDeleteDocument(
     id: Types.ObjectId | string,
@@ -56,8 +56,12 @@ export abstract class BaseRepository<T>  {
   async findAndUpdateDocument(
     id: Types.ObjectId | string,
     payload: UpdateQuery<T>,
+    options?: QueryOptions<T>,
   ): Promise<T | null> {
-    return await this.model.findByIdAndUpdate(id, payload, { new: true });
+    return await this.model.findByIdAndUpdate(id, payload, {
+      ...options,
+      returnDocument: 'after',
+    });
   }
   async deleteDocument(
     filter: QueryFilter<T>,
@@ -70,7 +74,10 @@ export abstract class BaseRepository<T>  {
     payload: UpdateQuery<T>,
     options?: QueryOptions<T>,
   ): Promise<UpdateWriteOpResult> {
-    return await this.model.updateOne(filter, payload, options as any);
+    return await this.model.updateOne(filter, payload, {
+      ...options,
+      new: true,
+    } as any);
   }
   async updateManyDocuments(
     filter: QueryFilter<T>,
