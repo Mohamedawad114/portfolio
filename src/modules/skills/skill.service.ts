@@ -50,14 +50,15 @@ export class SkillServices {
     return { message: 'Skill deleted successfully', data: deletedSkill };
   };
   getSkills = async (limit: number, page: number) => {
-    const cached = await redis.get(redisKeys.skills());
+    const offset= (page - 1) * limit
+    const cached = await redis.get(redisKeys.skills(limit,page));
     if (cached) return JSON.parse(cached);
     const [total, skills] = await Promise.all([
       this.skillRepository.countDocuments({ isDeleted: false }),
       this.skillRepository.findDocuments(
         { isDeleted: false },
         { isDeleted: 0 },
-        { sort: { createdAt: -1 }, limit: limit, skip: (page - 1) * limit },
+        { sort: { createdAt: -1 }, limit: limit, skip:offset },
       ),
     ]);
     const res = {
