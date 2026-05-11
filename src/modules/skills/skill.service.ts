@@ -41,9 +41,8 @@ export class SkillServices {
   };
   deleteSkill = async (skillId: Types.ObjectId) => {
     if (!skillId) throw new NotFoundException('SkillId not found');
-    const deletedSkill = await this.skillRepository.findAndUpdateDocument(
-      skillId,
-      { isDeleted: true },
+    const deletedSkill = await this.skillRepository.deleteDocument(
+      {_id:skillId},
     );
     if (!deletedSkill) throw new NotFoundException('Skill not found');
     await redis.del(redisKeys.skills());

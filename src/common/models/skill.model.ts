@@ -1,6 +1,6 @@
 import { MongooseModule, Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { ISKill } from '../Interfaces';
-import { HydratedDocument,  } from 'mongoose';
+import { HydratedDocument } from 'mongoose';
 
 @Schema({ autoIndex: true, strict: true, strictQuery: true, timestamps: true })
 export class Skill implements ISKill {
@@ -10,8 +10,6 @@ export class Skill implements ISKill {
   level!: number;
   @Prop({ type: String, required: true })
   trackName!: string;
-  @Prop({ type: Boolean, default: false })
-  isDeleted!: boolean;
 }
 export type SkillDocument = HydratedDocument<Skill>;
 const skillSchema = SchemaFactory.createForClass(Skill);

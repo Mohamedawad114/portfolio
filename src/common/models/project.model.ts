@@ -20,8 +20,6 @@ export class Project implements IProject {
     required: false,
   })
   liveLink!: string;
-  @Prop({ type: Boolean, default: false })
-  isDeleted!: boolean;
 }
 export type ProjectDocument = HydratedDocument<Project>;
 const projectSchema = SchemaFactory.createForClass(Project);

@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
   Param,
@@ -57,7 +58,7 @@ export class ProjectsController {
   @Auth()
   @ApiBearerAuth()
   @HttpCode(200)
-  @Post('/delete/:id')
+  @Delete('/delete/:id')
   @ApiOperation({ summary: 'Delete a project' })
   @ApiParam({ name: 'id', description: 'The ID of the project', type: String })
   @ApiResponse({ status: 200, description: 'Project deleted successfully' })

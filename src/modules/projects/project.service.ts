@@ -76,11 +76,10 @@ export class ProjectServices {
   };
   deleteProject = async (projectId: Types.ObjectId) => {
     if (!projectId) throw new NotFoundException('ProjectId not found');
-    const deleted = await this.projectRepo.updateDocument(
+    const deleted = await this.projectRepo.deleteDocument(
       { _id: projectId },
-      { isDeleted: true },
     );
-    if (!deleted.modifiedCount)
+    if (!deleted.deletedCount)
       throw new NotFoundException('Project deletion failed');
     await redis.del(redisKeys.projects());
     return { message: 'Project deleted successfully' };
