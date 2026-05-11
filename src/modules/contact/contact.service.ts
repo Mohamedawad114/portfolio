@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ContactRepository, redis, redisKeys } from 'src/common';
-import { AddContactInfo } from './Dto/addcontactInfo.dto';
 import { UpdateContactInfo } from './Dto/updateContactInfo.dto';
+import { AddContactInfo } from './Dto/addContactInfo.dto';
 
 @Injectable()
 export class ContactService {

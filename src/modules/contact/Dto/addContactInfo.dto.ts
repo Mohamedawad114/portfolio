@@ -36,4 +36,3 @@ export class AddContactInfo {
   @IsNotEmpty()
   facebook!: string;
 }
-

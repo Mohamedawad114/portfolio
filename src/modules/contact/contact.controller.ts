@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, Post, Put } from '@nestjs/common';
 import { ContactService } from './contact.service';
 import { Auth } from 'src/common';
 import { UpdateContactInfo } from './Dto/updateContactInfo.dto';
-import { AddContactInfo } from './Dto/addcontactInfo.dto';
+import { AddContactInfo } from './Dto/addContactInfo.dto';
 import {
   ApiTags,
   ApiOperation,
