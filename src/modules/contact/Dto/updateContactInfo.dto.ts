@@ -1,4 +1,4 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { AddContactInfo } from "./addContactInfo.dto";
+import { AddContactInfo } from "./addcontactInfo.dto";
 
 export class UpdateContactInfo extends PartialType(AddContactInfo) {}
